@@ -2,16 +2,17 @@
 
 namespace app\controllers;
 
+use app\services\CalculateService;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
-use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\CalculateForm;
 
 class SiteController extends Controller
 {
+    private CalculateService $calculateService;
     /**
      * {@inheritdoc}
      */
@@ -54,6 +55,12 @@ class SiteController extends Controller
         ];
     }
 
+    public function __construct($id, $module, CalculateService $calculateService, $config = [])
+    {
+        $this->calculateService = $calculateService;
+        parent::__construct($id, $module, $config);
+    }
+
     /**
      * Displays homepage.
      *
@@ -64,10 +71,9 @@ class SiteController extends Controller
         $model = new CalculateForm();
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $model->calculate();
-            return $this->render('index', ['model' => $model]);
+            return $this->render('index', ['model' => $model, 'result' => $this->calculateService->calculate($model->getDto())]);
         }
 
-        return $this->render('index', ['model' => $model]);
+        return $this->render('index', ['model' => $model, 'result' => null]);
     }
 }

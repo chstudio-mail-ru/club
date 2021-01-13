@@ -2,7 +2,9 @@
 
 namespace app\models;
 
+use JetBrains\PhpStorm\Pure;
 use yii\base\Model;
+use app\services\dto\CalculateDto;
 
 /**
  * CalculateForm is the model behind the calculate form.
@@ -18,7 +20,6 @@ class CalculateForm extends Model
     public $operation;
     public $number1;
     public $number2;
-    public $result;
 
     /**
      * @return array the validation rules.
@@ -44,14 +45,16 @@ class CalculateForm extends Model
         ];
     }
 
-    public function calculate()
+    /**
+     * @return CalculateDto
+     */
+    public function getDto(): CalculateDto
     {
-        $methodName = preg_replace("/\s/", "_", $this->operation);
-        $calculateService = new CalculatorService();
-        if (method_exists($calculateService, $methodName)) {
-            $this->result = $calculateService->$methodName($this->number1, $this->number2);
-        } else {
-            $this->result = "Method {$methodName} not supported!";
-        }
+        $dto = new CalculateDto();
+        $dto->operation = $this->operation;
+        $dto->number1 = $this->number1;
+        $dto->number2 = $this->number2;
+
+        return $dto;
     }
 }

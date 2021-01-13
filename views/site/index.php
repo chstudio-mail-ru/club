@@ -3,6 +3,7 @@
 /* @var $this yii\web\View */
 /* @var $form yii\bootstrap\ActiveForm */
 /* @var $model app\models\CalculateForm */
+/* @var $result string */
 
 use yii\bootstrap\ActiveForm;
 use app\models\CalculateForm;
@@ -35,9 +36,10 @@ $this->title = 'Клуб Приключений test';
     <?php ActiveForm::end(); ?>
 
     <?php
-    if ($model->result !== null) {
+    if ($result !== null) {
         echo $this->render('_result', [
-            'model' => $model
+            'model' => $model,
+            'result' => $result,
         ]);
     }
     ?>
